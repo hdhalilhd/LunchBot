@@ -20,6 +20,8 @@ class DataCfg:
     url: str = ""
     cache_ttl_minutes: int = 15
     date_column: str = "tarih"
+    # Sadece .xlsx icin: bos birakilirsa ilk/aktif sayfa kullanilir.
+    sheet_name: str = ""
 
 
 @dataclass

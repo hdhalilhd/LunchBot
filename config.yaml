@@ -1,49 +1,51 @@
 # ============================================================
 #  MenuBot ayarları
-#  Gizli bilgiler (token, grup id) burada DEĞİL, .env dosyasında.
+#  Gizli bilgiler (token) burada DEĞİL, .env dosyasında.
 # ============================================================
 
 data:
-  # local = data/menu.csv dosyasından oku
-  # url   = internetten indir (GitHub raw linki veya Google Sheets CSV yayın linki)
-  source: local
+  # url   = internetten indir (GitHub raw linki / Sheets CSV yayın linki)
+  # local = local_path dosyasından oku
+  source: url
 
-  local_path: data/menu.csv
+  # Excel'i GitHub'da güncellediğinde bot en geç cache_ttl_minutes içinde görür.
+  url: "https://raw.githubusercontent.com/hdhalilhd/lunchnotice/main/Yemek_Listesi.xlsx"
 
-  # source: url ise burası kullanılır. Örnekler:
-  #   GitHub : https://raw.githubusercontent.com/KULLANICI/REPO/main/menu.csv
-  #   Sheets : Dosya > Paylaş > Web'de yayınla > CSV  ile aldığın link
-  url: ""
+  # source: local iken kullanılır (internet yokken yedek olarak da işe yarar)
+  local_path: data/Yemek_Listesi.xlsx
 
-  # İndirilen veri kaç dakika bellekte tutulsun (url modunda)
   cache_ttl_minutes: 15
 
-  # CSV'deki tarih kolonunun adı
-  date_column: tarih
+  # Tarih kolonunun adı (büyük/küçük harf farkı önemsiz)
+  date_column: Tarih
 
-# Mesajda gösterilecek kolonlar. Sıra buradaki sıra ile aynı olur.
-# Sol taraf = CSV kolon adı, sağ taraf = mesajda görünecek başlık.
-# CSV'ye yeni kolon eklersen buraya da ekle; eklemezsen mesajda çıkmaz.
+  # Sadece .xlsx için. Boş = ilk sayfa.
+  sheet_name: ""
+
+# Mesajda gösterilecek kolonlar; sıra buradaki sıra ile aynı olur.
+# Sol taraf = Excel'deki kolon adı, sağ taraf = mesajda görünecek başlık.
+# "Gün" kolonu burada yok çünkü tarih satırı zaten günü yazıyor.
 fields:
-  kahvalti: "🍳 Kahvaltı"
-  ogle: "🍽️ Öğle"
-  aksam: "🌙 Akşam"
-  not: "📝 Not"
+  "çorba": "🍲 Çorba"
+  "ana yemek": "🍽️ Ana Yemek"
+  "yan": "🥗 Yan"
+  "ekstra": "🍮 Ekstra"
 
-# Her sabah gruba atılan otomatik mesaj
+# Her sabah gruba atılan otomatik mesaj.
+# ŞİMDİLİK KAPALI — grup açılınca true yap ve .env'e GROUP_CHAT_ID yaz.
 daily_post:
-  enabled: true
+  enabled: false
   time: "08:00"
   timezone: "Europe/Istanbul"
-  # Cumartesi/Pazar mesaj atılmasın mı?
-  skip_weekends: false
-  # O gün için veri yoksa hiç mesaj atma
+  # Menüde hafta sonu yok; boşuna çalışmasın.
+  skip_weekends: true
+  # O gün için veri yoksa (resmi tatil vb.) hiç mesaj atma
   skip_if_empty: true
   # Gruba atılan mesajın başına eklenen satır (boş bırakabilirsin)
-  intro: "Günaydın! ☀️ Bugünün programı:"
+  intro: "Günaydın! ☀️ Bugünün menüsü:"
 
 messages:
-  no_data: "{tarih} için kayıtlı bir şey bulamadım."
+  no_data: "{tarih} için menü bulamadım."
   not_understood: |
     Anlayamadım 🤔 Şu şekilde sorabilirsin:
 
@@ -55,7 +57,6 @@ messages:
 
     Komutlar: /bugun  /yarin  /hafta  /yardim
 
-# Yönetici Telegram kullanıcı id'leri (sayı). /yenile, /onizle gibi
-# komutları sadece bunlar kullanabilir. Boş bırakırsan kurulum modunda
-# çalışır ve /chatid komutu herkese açık olur.
-admins: []
+# Yönetici Telegram kullanıcı id'leri. /yenile, /durum, /onizle bunlara açık.
+admins:
+  - 000000000
