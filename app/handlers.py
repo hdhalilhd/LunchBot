@@ -8,7 +8,7 @@ gruba sadece sabah isi (jobs.py) mesaj atar.
 from __future__ import annotations
 
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from telegram import Update
 from telegram.constants import ParseMode
@@ -74,8 +74,6 @@ def build_handlers(cfg: Config, store: MenuStore) -> list:
         await _reply(update, render_day(cfg, day, store.get(day)))
 
     async def yarin(update: Update, _ctx: ContextTypes.DEFAULT_TYPE) -> None:
-        from datetime import timedelta
-
         day = _today(cfg) + timedelta(days=1)
         await _reply(update, render_day(cfg, day, store.get(day)))
 

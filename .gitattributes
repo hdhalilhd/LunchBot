@@ -1,0 +1,8 @@
+# Linux'ta calisacak dosyalar her zaman LF olmali; CRLF olursa
+# bash "$'\r': command not found" hatasi verir.
+*.sh        text eol=lf
+*.service   text eol=lf
+*.py        text eol=lf
+*.yaml      text eol=lf
+*.csv       text eol=lf
+*.ps1       text eol=crlf
