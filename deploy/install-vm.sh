@@ -2,11 +2,8 @@
 # MenuBot'u Ubuntu/Debian bir VM'e GitHub'dan kurar.
 #
 # Ilk kurulum:
-#   sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/KULLANICI/menubot/main/deploy/install-vm.sh)" -- https://github.com/KULLANICI/menubot
-#
-# ya da elle:
-#   sudo apt install -y git
-#   sudo git clone https://github.com/KULLANICI/menubot /opt/menubot
+#   sudo apt update && sudo apt install -y git
+#   sudo git clone https://github.com/hdhalilhd/LunchBot /opt/menubot
 #   sudo bash /opt/menubot/deploy/install-vm.sh
 #
 # Tekrar calistirmak zararsiz: mevcut kurulumu gunceller, .env'e dokunmaz.
@@ -32,7 +29,7 @@ if [ -d "$APP_DIR/.git" ]; then
   git -C "$APP_DIR" pull --ff-only
 else
   if [ -z "$REPO_URL" ]; then
-    echo "Repo adresi lazim:  sudo bash $0 https://github.com/KULLANICI/menubot"
+    echo "Repo adresi lazim:  sudo bash $0 https://github.com/hdhalilhd/LunchBot"
     exit 1
   fi
   git clone "$REPO_URL" "$APP_DIR"

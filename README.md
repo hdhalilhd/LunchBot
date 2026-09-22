@@ -165,7 +165,7 @@ buradan push edersin, VM çeker.
 
 ```bash
 sudo apt update && sudo apt install -y git
-sudo git clone https://github.com/KULLANICI/menubot /opt/menubot
+sudo git clone https://github.com/hdhalilhd/LunchBot /opt/menubot
 sudo bash /opt/menubot/deploy/install-vm.sh
 sudo nano /opt/menubot/.env      # BOT_TOKEN, ADMIN_IDS, GROUP_CHAT_ID
 sudo systemctl start menubot
