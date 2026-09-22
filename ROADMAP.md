@@ -28,7 +28,7 @@ Veri: [hdhalilhd/lunchnotice](https://github.com/hdhalilhd/lunchnotice) → `Yem
 - [x] Gizlilik modu zaten **açık** — bot grup konuşmalarını okuyamıyor
       (`can_read_all_group_messages: false`). Ayrıca kodda da engelli.
 - [x] Komut menüsü kuruldu (`scripts/set_commands.py`)
-- [x] Admin id `000000000` tanımlı
+- [x] Admin id `.env` → `ADMIN_IDS` içinde (depoya girmiyor)
 - [ ] **(sen)** @Lunchaibot'a özel mesaj at, cevapları doğrula
 
 ## Faz 3 — Gerçek veri  ✅ bitti
@@ -88,9 +88,10 @@ mesajda "🥗 Yardımcı" ve "🍮 Tatlı/Meyve" diye yazılıyor; oysa içerik
 Satır 50'deki "Ekstra çıkarıldı" yorumu da doğru değil — çıkarılmamış.
 Yeni botta başlıklar gerçek kolon adlarıyla eşlendi.
 
-**4. Kişisel id kodda açıkta.** `menu_to_telegram.py` içinde kendi
-kullanıcı id'n (`000000000`) ve grup id'si sabit yazılı, repo public.
-Grup id'si kritik değil ama id'lerin `.env`/secrets'ta durması daha iyi.
+**4. Kişisel id kodda açıkta.** `menu_to_telegram.py` içinde kendi Telegram
+kullanıcı id'n ve grup id'si sabit yazılı, üstelik depo herkese açık.
+Kritik bir açık değil ama bu id'lerin `.env` / GitHub Secrets içinde
+durması daha doğru. Yeni botta ikisi de `.env`'de.
 
 ### Geçiş için iki seçenek
 
