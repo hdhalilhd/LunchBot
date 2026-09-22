@@ -2,7 +2,7 @@
 
 Durum: `[x]` bitti · `[ ]` sırada · **(sen)** senden bir şey gerekiyor
 
-Bot: **@Lunchaibot** (id `000000000`, ad "Yemek-bot-ai")
+Bot: **@Lunchaibot** ("Yemek-bot-ai")
 Veri: [hdhalilhd/lunchnotice](https://github.com/hdhalilhd/lunchnotice) → `Yemek_Listesi.xlsx`
 
 ---
