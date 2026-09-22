@@ -1,181 +1,152 @@
-# MenuBot
+# MenuBot — @Lunchaibot
 
 Telegram botu. İki iş yapar:
 
-1. **Özel sohbette** "bugün ne var", "yarın ne var", "çarşamba ne var", "24 eylül", "bu hafta" gibi sorulara cevap verir.
-2. **Her sabah 08:00'de** belirlenen gruba o günün programını yazar.
+1. **Özel sohbette** "bugün ne var", "yarın ne var", "çarşamba ne var",
+   "24 eylül", "bu hafta" gibi sorulara cevap verir.
+2. **Her sabah 08:00'de** belirlenen gruba o günün menüsünü yazar.
+   *(Şu an kapalı — grup açılınca devreye girecek.)*
 
-Grupta bot **hiçbir mesaja cevap vermez** — gruba sadece sabah duyurusunu gönderir.
+Grupta bot **hiçbir mesaja cevap vermez**; gruba sadece sabah duyurusunu gönderir.
 
-Yapay zeka kullanmaz. Soru anlama tamamen kural tabanlıdır (`app/nlu.py`), o yüzden
-bedava, anında ve internetsiz çalışır.
+Yapay zeka kullanmaz. Soru anlama tamamen kural tabanlıdır ([app/nlu.py](app/nlu.py)),
+o yüzden bedava, anında ve öngörülebilir çalışır.
+
+Menü verisi [hdhalilhd/lunchnotice](https://github.com/hdhalilhd/lunchnotice)
+reposundaki `Yemek_Listesi.xlsx` dosyasından **doğrudan** okunur — Excel'i her ay
+GitHub'a yükleme alışkanlığın aynen devam eder, dönüştürme adımı yok.
 
 ---
 
-## 1. Hızlı başlangıç (Windows, bu bilgisayar)
-
-Python 3.12 ve sanal ortam zaten kurulu. Tek yapman gereken:
+## 1. Çalıştırma (Windows)
 
 ```powershell
 cd C:\Users\halii\menubot
-
-# Token olmadan mesajların nasıl görüneceğine bak:
-.venv\Scripts\python.exe scripts\preview.py "bugün ne var"
-.venv\Scripts\python.exe scripts\preview.py "bu hafta"
-.venv\Scripts\python.exe scripts\preview.py --sabah
-
-# İnteraktif deneme (bot varmış gibi yazışırsın):
-.venv\Scripts\python.exe scripts\preview.py
-```
-
-Botu gerçekten çalıştırmak için önce `.env` lazım (bkz. bölüm 2), sonra:
-
-```powershell
 powershell -ExecutionPolicy Bypass -File scripts\run.ps1
 ```
 
----
+Durdurmak için Ctrl+C. Aynı anda **tek** yerde çalışmalı (iki polling çakışır).
 
-## 2. Telegram tarafı kurulumu
+### Telegram'sız önizleme
 
-### 2.1 Bot oluştur
-
-1. Telegram'da **@BotFather**'a yaz → `/newbot`
-2. Bir isim ve `...bot` ile biten bir kullanıcı adı ver.
-3. Sana verdiği **token**'ı kopyala (`123456789:AA...` biçiminde).
-
-### 2.2 Botu gruptaki konuşmalara sağır yap
-
-BotFather'da:
-
-```
-/setprivacy  →  botunu seç  →  Enable
-```
-
-Bu ayar açıkken bot, gruplardaki normal mesajları **hiç görmez**. Kod tarafında da
-ayrıca engelli (`filters.ChatType.PRIVATE`), yani iki katmanlı koruma var.
-
-### 2.3 .env dosyasını doldur
+Bot çalışmıyorken bile çıktıyı görebilirsin:
 
 ```powershell
-Copy-Item .env.example .env
-notepad .env
+.venv\Scripts\python.exe scripts\preview.py "bugün ne var"
+.venv\Scripts\python.exe scripts\preview.py "bu hafta"
+.venv\Scripts\python.exe scripts\preview.py --sabah      # sabah mesajı önizlemesi
+.venv\Scripts\python.exe scripts\preview.py              # interaktif
 ```
-
-```
-BOT_TOKEN=123456789:AA...
-GROUP_CHAT_ID=-1001234567890
-```
-
-### 2.4 Grup id'sini öğren
-
-1. Botu gruba ekle.
-2. Gruba `/chatid@BOTKULLANICIADIN` yaz. (Privacy açık olsa bile komutlar bota ulaşır.)
-3. Bot `chat_id: -100...` diye cevap verir → bunu `.env` içine yaz.
-
-Bot henüz çalışmıyorsa alternatif:
-
-```powershell
-.venv\Scripts\python.exe scripts\chat_id.py
-```
-
-> `chat_id` grup için hep **eksi** ile başlar. `admins:` listesi boşken `/chatid`
-> herkese açıktır; kurulum bitince kendi kullanıcı id'ni `config.yaml` içindeki
-> `admins` listesine ekle.
 
 ---
 
-## 3. Veri (yemek listesi)
+## 2. Kullanım
 
-`data/menu.csv` — Excel veya Google Sheets ile rahatça düzenlenir.
-
-```csv
-tarih,kahvalti,ogle,aksam,not
-2026-09-22,"Omlet, Zeytin","Mercimek çorbası, Köfte, Makarna","Fırın tavuk, Sütlaç",Kermes var
-```
-
-Kurallar:
-
-* **`tarih` kolonu zorunlu.** `2026-09-22`, `22.09.2026`, `22/09/2026` kabul edilir.
-* Diğer kolonların adı sana kalmış. Mesajda görünmesini istediğin her kolonu
-  `config.yaml` → `fields` altına ekle:
-
-  ```yaml
-  fields:
-    kahvalti: "🍳 Kahvaltı"
-    ogle: "🍽️ Öğle"
-  ```
-
-* Boş hücreler mesajda hiç görünmez.
-* İçinde virgül olan hücreleri `"tırnak"` içine al.
-* Yerel dosyada değişiklik yaptığında bot otomatik fark eder (dosya tarihine bakar).
-
-JSON da desteklenir:
-
-```json
-{ "2026-09-22": { "ogle": "Köfte", "aksam": "Çorba" } }
-```
-
-> Bu yapı yemek listesine özel değil. `fields`'ı değiştirerek ders programı,
-> nöbet listesi, etkinlik takvimi için de aynı botu kullanabilirsin.
-
-### 3.1 Veriyi GitHub'dan çekmek
-
-`menu.csv`'yi bir repoya koy, sonra `config.yaml`:
-
-```yaml
-data:
-  source: url
-  url: "https://raw.githubusercontent.com/KULLANICI/REPO/main/menu.csv"
-  cache_ttl_minutes: 15
-```
-
-Artık listeyi güncellemek için VM'e girmene gerek yok — GitHub'da dosyayı
-değiştirmen yeterli, bot en geç 15 dakikada yakalar (`/yenile` ile anında).
-
-### 3.2 Veriyi Google Sheets'ten çekmek
-
-Sheets'te: **Dosya → Paylaş → Web'de yayınla → CSV → Yayınla**.
-Çıkan linki aynı şekilde `data.url` alanına yaz. API anahtarı gerekmez.
-
----
-
-## 4. Komutlar
+Özel sohbette düz cümle yeter: "bugün ne var", "yarın menü nedir", "cuma",
+"öbür gün", "1 ekim", "haftaya cuma", "bu hafta".
 
 | Komut | Nerede | Ne yapar |
 |---|---|---|
 | `/start` | özel | Karşılama |
-| `/bugun` | özel | Bugünün programı |
-| `/yarin` | özel | Yarının programı |
+| `/bugun` | özel | Bugünün menüsü |
+| `/yarin` | özel | Yarının menüsü |
 | `/hafta` | özel | Bu haftanın tamamı |
 | `/gun 24 eylül` | özel | Belirli bir gün |
 | `/yardim` | özel | Örnek kullanımlar |
-| `/chatid` | her yer | chat id + kullanıcı id (admin / kurulum modu) |
+| `/chatid` | her yer | chat id + kullanıcı id (admin) |
 | `/yenile` | özel | Veriyi yeniden oku (admin) |
-| `/durum` | özel | Saat, grup, zamanlayıcı, veri durumu (admin) |
+| `/durum` | özel | Saat, zamanlayıcı, veri kapsamı (admin) |
 | `/onizle` | özel | Sabah mesajının önizlemesi (admin) |
 
-Komut yazmadan düz cümle de olur: "bugün ne var", "yarın menü nedir", "cuma",
-"öbür gün", "1 ekim", "haftaya".
+Komut menüsünü değiştirmek için `scripts/set_commands.py`.
+
+---
+
+## 3. Veri
+
+Kaynak [config.yaml](config.yaml) içinde:
+
+```yaml
+data:
+  source: url
+  url: "https://raw.githubusercontent.com/hdhalilhd/lunchnotice/main/Yemek_Listesi.xlsx"
+  cache_ttl_minutes: 15
+  date_column: Tarih
+```
+
+Excel'i GitHub'da güncelledin mi bot en geç 15 dakikada görür; beklemek
+istemezsen özel sohbette `/yenile` yaz.
+
+### Kolonlar
+
+Excel'in ilk satırı başlık olmalı. Şu an:
+
+```
+Tarih | Gün | Çorba | Ana Yemek | Yan | Ekstra
+```
+
+Mesajda hangi kolonun hangi başlıkla görüneceği [config.yaml](config.yaml) → `fields`:
+
+```yaml
+fields:
+  "çorba": "🍲 Çorba"
+  "ana yemek": "🍽️ Ana Yemek"
+  "yan": "🥗 Yan"
+  "ekstra": "🍮 Ekstra"
+```
+
+* Kolon adında büyük/küçük harf farkı önemsiz.
+* `fields`'a yazmadığın kolon mesajda görünmez (`Gün` bilerek dışarıda —
+  tarih satırı zaten günü yazıyor).
+* Boş hücreler atlanır.
+* Kolon eklersen/çıkarırsan **kod değil sadece bu liste** değişir.
+
+### Tarih biçimi
+
+`22 Eylül 2026` (mevcut biçim), `2026-09-22`, `22.09.2026`, `22/09/2026` ve
+Excel'in gerçek tarih hücreleri — hepsi çalışır.
+
+### Alternatif kaynaklar
+
+* **Yerel dosya:** `source: local` + `local_path: data/Yemek_Listesi.xlsx`
+* **Google Sheets:** Dosya → Paylaş → Web'de yayınla → CSV; çıkan linki `url`'e yaz
+* **CSV / JSON:** aynı şekilde okunur ([data/menu.csv](data/menu.csv) örnek biçim)
+
+> ⚠️ Elimizdeki veri **30 Eylül 2026'da bitiyor.** Ekim menüsü yüklenmezse
+> bot o tarihten sonra "menü bulamadım" der.
+
+---
+
+## 4. Grup açılınca yapılacaklar
+
+1. Grubu kur, @Lunchaibot'u ekle.
+2. Gruba `/chatid@Lunchaibot` yaz → çıkan `-100...` numarasını al.
+3. `.env` içine `GROUP_CHAT_ID=-100...` yaz.
+4. [config.yaml](config.yaml) → `daily_post.enabled: true`.
+5. Botu yeniden başlat, `/onizle` ile kontrol et.
+
+Gizlilik modu zaten açık (`can_read_all_group_messages: false`), yani bot
+gruptaki konuşmaları **göremez**. Kodda da ayrıca engelli — çift kilit.
+
+Eski GitHub Actions duyurusu hâlâ aktifse gruba günde iki mesaj gider;
+[ROADMAP.md](ROADMAP.md) içindeki "Eski sistemle ilişki" bölümüne bak.
 
 ---
 
 ## 5. VM'e taşıma
 
-Ubuntu/Debian bir VM'de:
-
 ```bash
-git clone <repo-url> menubot   # ya da dosyaları scp ile kopyala
+git clone <repo-url> menubot
 cd menubot
 sudo bash deploy/install-vm.sh
-sudo nano /opt/menubot/.env    # BOT_TOKEN ve GROUP_CHAT_ID
+sudo nano /opt/menubot/.env     # BOT_TOKEN (+ varsa GROUP_CHAT_ID)
 sudo systemctl restart menubot
 journalctl -u menubot -f
 ```
 
-Script şunları yapar: paketleri kurar, saat dilimini `Europe/Istanbul` yapar,
-`menubot` adında servis kullanıcısı açar, `/opt/menubot` altına kurar, venv
-oluşturur, systemd servisi olarak çalıştırır ve açılışta otomatik başlatır.
+Script paketleri kurar, saat dilimini `Europe/Istanbul` yapar, `menubot`
+servis kullanıcısı açar, `/opt/menubot` altına kurar, venv oluşturur ve
+systemd servisi olarak açılışta otomatik başlatır.
 
 ---
 
@@ -197,18 +168,21 @@ menubot/
 ├── requirements.txt
 ├── app/
 │   ├── config.py           # ayar okuma
-│   ├── datasource.py       # CSV/JSON + yerel/URL + önbellek
-│   ├── nlu.py              # "bugün ne var" → tarih  (AI yok, kural tabanlı)
+│   ├── datasource.py       # xlsx/csv/json + yerel/URL + önbellek
+│   ├── nlu.py              # "bugün ne var" → tarih  (AI yok)
 │   ├── render.py           # tarih + satır → Telegram mesajı
 │   ├── handlers.py         # komutlar ve serbest metin
 │   └── jobs.py             # her sabah 08:00 grup mesajı
-├── data/menu.csv           # veri
+├── data/
+│   ├── Yemek_Listesi.xlsx  # yerel yedek kopya
+│   └── menu.csv            # CSV biçimi örneği
 ├── scripts/
 │   ├── preview.py          # Telegram'sız önizleme
+│   ├── set_commands.py     # komut menüsü
 │   ├── chat_id.py          # grup id bulma
 │   └── run.ps1             # Windows'ta çalıştır
 ├── deploy/
 │   ├── menubot.service     # systemd
 │   └── install-vm.sh       # VM kurulumu
-└── tests/test_nlu.py
+└── tests/                  # 55 test
 ```
