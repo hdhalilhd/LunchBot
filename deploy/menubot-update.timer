@@ -1,0 +1,13 @@
+[Unit]
+Description=MenuBot guncellemesini periyodik kontrol et
+
+[Timer]
+# Acilistan 2 dk sonra, sonra her 10 dakikada bir.
+OnBootSec=2min
+OnUnitActiveSec=10min
+# Ayni anda hepsi calismasin diye 30 sn'ye kadar rastgele gecikme
+RandomizedDelaySec=30s
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -58,5 +58,8 @@ messages:
     Komutlar: /bugun  /yarin  /hafta  /yardim
 
 # Yönetici Telegram kullanıcı id'leri. /yenile, /durum, /onizle bunlara açık.
-admins:
-  - 000000000
+# Bu depo herkese açık olabileceği için id'ler burada değil .env içinde:
+#   ADMIN_IDS=111111,222222
+# Boş bırakılırsa ve .env'de de yoksa bot "kurulum modu"nda çalışır
+# (/chatid herkese açık olur).
+admins: []

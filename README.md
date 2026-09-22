@@ -158,18 +158,57 @@ Eski GitHub Actions duyurusu hâlâ aktifse gruba günde iki mesaj gider;
 
 ## 5. VM'e taşıma
 
+VM kodu **GitHub'dan** çeker. Kod değişince VM'e dosya kopyalamazsın;
+buradan push edersin, VM çeker.
+
+### İlk kurulum (VM'de, bir kez)
+
 ```bash
-git clone <repo-url> menubot
-cd menubot
-sudo bash deploy/install-vm.sh
-sudo nano /opt/menubot/.env     # BOT_TOKEN (+ varsa GROUP_CHAT_ID)
-sudo systemctl restart menubot
+sudo apt update && sudo apt install -y git
+sudo git clone https://github.com/KULLANICI/menubot /opt/menubot
+sudo bash /opt/menubot/deploy/install-vm.sh
+sudo nano /opt/menubot/.env      # BOT_TOKEN, ADMIN_IDS, GROUP_CHAT_ID
+sudo systemctl start menubot
 journalctl -u menubot -f
 ```
 
 Script paketleri kurar, saat dilimini `Europe/Istanbul` yapar, `menubot`
-servis kullanıcısı açar, `/opt/menubot` altına kurar, venv oluşturur ve
-systemd servisi olarak açılışta otomatik başlatır.
+servis kullanıcısı açar, venv kurar, systemd servisi olarak açılışta
+otomatik başlatır.
+
+### Güncelleme
+
+Windows'ta değiştir → `git push` → VM'de:
+
+```bash
+sudo /opt/menubot/deploy/update.sh
+```
+
+Script `git pull` yapar, **değişiklik yoksa hiçbir şey yapmaz**,
+`requirements.txt` değiştiyse bağımlılıkları kurar, systemd dosyası
+değiştiyse yeniden yükler, sonra botu yeniden başlatır ve gerçekten
+ayağa kalktığını doğrular.
+
+### Otomatik güncelleme (isteğe bağlı)
+
+```bash
+sudo systemctl enable --now menubot-update.timer
+```
+
+10 dakikada bir GitHub'ı kontrol eder, değişiklik varsa çeker ve yeniden
+başlatır. Kapatmak için `sudo systemctl disable --now menubot-update.timer`.
+
+> `.env` git'te değildir, VM'de kalır. Güncellemeler ona dokunmaz — token'ı
+> tekrar tekrar girmezsin.
+
+### Faydalı komutlar
+
+```bash
+journalctl -u menubot -f                    # canlı log
+journalctl -u menubot-update --since today  # güncelleme geçmişi
+sudo systemctl restart menubot              # yeniden başlat
+systemctl list-timers menubot-update        # sonraki kontrol ne zaman
+```
 
 ---
 

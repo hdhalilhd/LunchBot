@@ -1,0 +1,11 @@
+[Unit]
+Description=MenuBot - GitHub'dan otomatik guncelleme
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/menubot/deploy/update.sh
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=menubot-update

@@ -93,6 +93,17 @@ def load_config(config_path: Path | None = None, *, require_token: bool = True) 
         except ValueError:
             raise SystemExit(f"GROUP_CHAT_ID sayi olmali, gelen: {raw_group!r}")
 
+    # Yonetici id'leri once .env'den (ADMIN_IDS=111,222), yoksa config.yaml'dan.
+    # .env tercih ediliyor ki repo herkese acik olsa bile kisisel id sizmasin.
+    raw_admins = os.getenv("ADMIN_IDS", "").strip()
+    if raw_admins:
+        try:
+            admins = [int(p) for p in raw_admins.replace(";", ",").split(",") if p.strip()]
+        except ValueError:
+            raise SystemExit(f"ADMIN_IDS virgulle ayrilmis sayilar olmali, gelen: {raw_admins!r}")
+    else:
+        admins = [int(a) for a in (raw.get("admins") or [])]
+
     return Config(
         bot_token=token,
         group_chat_id=group_id,
@@ -100,5 +111,5 @@ def load_config(config_path: Path | None = None, *, require_token: bool = True) 
         daily_post=DailyPostCfg(**(raw.get("daily_post") or {})),
         fields=raw.get("fields") or {},
         messages=raw.get("messages") or {},
-        admins=[int(a) for a in (raw.get("admins") or [])],
+        admins=admins,
     )
