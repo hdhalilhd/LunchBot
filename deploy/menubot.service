@@ -1,0 +1,26 @@
+[Unit]
+Description=MenuBot - Telegram menu/program botu
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=menubot
+Group=menubot
+WorkingDirectory=/opt/menubot
+ExecStart=/opt/menubot/.venv/bin/python /opt/menubot/bot.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=menubot
+
+# Basit sertlestirme
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/menubot
+
+[Install]
+WantedBy=multi-user.target
