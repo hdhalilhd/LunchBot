@@ -106,6 +106,29 @@ fields:
 `22 Eylül 2026` (mevcut biçim), `2026-09-22`, `22.09.2026`, `22/09/2026` ve
 Excel'in gerçek tarih hücreleri — hepsi çalışır.
 
+### Yeni ay menüsü geldiğinde
+
+Akış aynı kalıyor — Excel'i [lunchnotice](https://github.com/hdhalilhd/lunchnotice)
+reposuna `Yemek_Listesi.xlsx` adıyla yükle, bot otomatik görür.
+
+Yüklemeden **önce** kontrol et:
+
+```powershell
+.venv\Scripts\python.exe scripts\kontrol.py "C:\yol\Ekim_Menu.xlsx"
+```
+
+Bu komut kaç gün okunduğunu, kolonların eşleşip eşleşmediğini, boş hücreleri,
+eksik iş günlerini ve örnek mesajı gösterir. Hepsi ✅ ise yükleyebilirsin.
+
+Yükledikten sonra bota `/yenile` yaz (yoksa 15 dakika bekler), sonra `/durum`
+ile kapsamı doğrula.
+
+Dikkat edilecekler:
+
+* Dosya adı **aynı** olmalı: `Yemek_Listesi.xlsx`
+* İlk satır başlık olmalı, başlıklar aynı kalmalı
+* Tarih biçimi `1 Ekim 2026` (mevcut biçim) — gün adı Türkçe ay adıyla
+
 ### Alternatif kaynaklar
 
 * **Yerel dosya:** `source: local` + `local_path: data/Yemek_Listesi.xlsx`
