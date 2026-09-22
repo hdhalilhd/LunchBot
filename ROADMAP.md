@@ -3,6 +3,7 @@
 Durum: `[x]` bitti · `[ ]` sırada · **(sen)** senden bir şey gerekiyor
 
 Bot: **@Lunchaibot** ("Yemek-bot-ai")
+Kod: [hdhalilhd/LunchBot](https://github.com/hdhalilhd/LunchBot) (public)
 Veri: [hdhalilhd/lunchnotice](https://github.com/hdhalilhd/lunchnotice) → `Yemek_Listesi.xlsx`
 
 ---
@@ -47,14 +48,24 @@ Veri: [hdhalilhd/lunchnotice](https://github.com/hdhalilhd/lunchnotice) → `Yem
 - [ ] **Karar gerek:** eski GitHub Actions duyurusu kapatılsın mı?
       (bkz. aşağıdaki "Eski sistemle ilişki")
 
-## Faz 5 — VM'e taşıma
+## Faz 5 — Dağıtım altyapısı  ✅ bitti
+
+- [x] Kod GitHub'da: [hdhalilhd/LunchBot](https://github.com/hdhalilhd/LunchBot)
+- [x] Kişisel id'ler `.env`'e taşındı; depoda ve git geçmişinde sızıntı yok
+- [x] `deploy/install-vm.sh` — VM'e git'ten kurulum, tekrar çalıştırmak zararsız
+- [x] `deploy/update.sh` — `git pull` + gerekirse pip/systemd + restart + sağlık kontrolü
+- [x] `menubot-update.timer` — isteğe bağlı 10 dakikada bir otomatik güncelleme
+
+Akış: Windows'ta değiştir → `git push` → VM `update.sh` (ya da timer kendi çeker).
+
+## Faz 6 — VM'e taşıma  ⬅️ **sırada (sen)**
 
 - [ ] **(sen)** VM aç (Ubuntu 22.04/24.04, 1 vCPU / 1 GB yeter)
 - [ ] **(sen)** SSH erişimi ver — anahtarı ben üretip public kısmını veririm
-- [ ] `deploy/install-vm.sh` → systemd servisi, açılışta otomatik başlar
+- [ ] `install-vm.sh` çalıştır, `.env`'i doldur
 - [ ] Windows'taki kopyayı kapat (aynı token iki yerden **polling** yapamaz)
 
-## Faz 6 — İsteğe bağlı
+## Faz 7 — İsteğe bağlı
 
 - [ ] Menüde arama: "bu hafta köfte var mı"
 - [ ] Ay sonu yaklaşınca "yeni menüyü yükle" hatırlatması
