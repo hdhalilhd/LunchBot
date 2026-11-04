@@ -33,7 +33,8 @@ def setup_daily_job(app: Application, cfg: Config, store: MenuStore) -> None:
     hour, minute = cfg.daily_post.hour_minute
     when = dt.time(hour=hour, minute=minute, tzinfo=cfg.daily_post.tz)
 
-    days = (0, 1, 2, 3, 4) if cfg.daily_post.skip_weekends else tuple(range(7))
+    # PTB run_daily gun numaralari: 0=pazar ... 6=cumartesi. Pazartesi-cuma = 1-5.
+    days = (1, 2, 3, 4, 5) if cfg.daily_post.skip_weekends else tuple(range(7))
 
     async def daily(ctx: ContextTypes.DEFAULT_TYPE) -> None:
         today = dt.datetime.now(cfg.tz).date()
@@ -50,8 +51,16 @@ def setup_daily_job(app: Application, cfg: Config, store: MenuStore) -> None:
         )
         log.info("Sabah mesaji gonderildi: %s -> %s", today, cfg.group_chat_id)
 
-    app.job_queue.run_daily(daily, time=when, days=days, name="gunluk_duyuru")
+    app.job_queue.run_daily(
+        daily,
+        time=when,
+        days=days,
+        name="gunluk_duyuru",
+        # Varsayilan tolerans 1 sn: bot o anda mesgulse gunun mesaji sessizce atlanir.
+        job_kwargs={"misfire_grace_time": 600},
+    )
     log.info(
-        "Sabah mesaji kuruldu: her gun %02d:%02d (%s), hedef %s",
+        "Sabah mesaji kuruldu: %s %02d:%02d (%s), hedef %s",
+        "hafta ici" if cfg.daily_post.skip_weekends else "her gun",
         hour, minute, cfg.daily_post.timezone, cfg.group_chat_id,
     )

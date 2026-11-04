@@ -19,7 +19,7 @@ Veri: [hdhalilhd/lunchnotice](https://github.com/hdhalilhd/lunchnotice) → `Yem
 - [x] Kural tabanlı soru çözümleme — AI yok
 - [x] Mesaj şablonu (`config.yaml` → `fields`)
 - [x] Komutlar + serbest metin, **sadece özel sohbette**
-- [x] Günlük duyuru işi (şu an kapalı, grup bekleniyor)
+- [x] Günlük duyuru işi (hafta içi 08:30)
 - [x] `scripts/preview.py` — Telegram'sız önizleme
 - [x] 55 birim testi, hepsi geçiyor
 
@@ -42,10 +42,10 @@ Veri: [hdhalilhd/lunchnotice](https://github.com/hdhalilhd/lunchnotice) → `Yem
 
 ## Faz 4 — Grup  ⬅️ **sırada (sen)**
 
-- [ ] **(sen)** Grubu aç, @Lunchaibot'u ekle
-- [ ] **(sen)** Gruba `/chatid@Lunchaibot` yaz → çıkan numarayı bana ver
-- [ ] `.env` → `GROUP_CHAT_ID`, `config.yaml` → `daily_post.enabled: true`
-- [ ] **Karar gerek:** eski GitHub Actions duyurusu kapatılsın mı?
+- [x] Grup açık, @Lunchaibot üye
+- [ ] **(sen)** Grupta üyelerin yazması kapalı: @Lunchaibot'u yönetici yap
+- [x] `.env` → `GROUP_CHAT_ID`, `config.yaml` → `daily_post.enabled: true`, hafta içi 08:30
+- [ ] Bot grupta çalışınca eski GitHub Actions duyurusunu kapat
       (bkz. aşağıdaki "Eski sistemle ilişki")
 
 ## Faz 5 — Dağıtım altyapısı  ✅ bitti
@@ -58,12 +58,12 @@ Veri: [hdhalilhd/lunchnotice](https://github.com/hdhalilhd/lunchnotice) → `Yem
 
 Akış: Windows'ta değiştir → `git push` → VM `update.sh` (ya da timer kendi çeker).
 
-## Faz 6 — VM'e taşıma  ⬅️ **sırada (sen)**
+## Faz 6 — VM'e taşıma  ✅ bitti
 
-- [ ] **(sen)** VM aç (Ubuntu 22.04/24.04, 1 vCPU / 1 GB yeter)
-- [ ] **(sen)** SSH erişimi ver — anahtarı ben üretip public kısmını veririm
-- [ ] `install-vm.sh` çalıştır, `.env`'i doldur
-- [ ] Windows'taki kopyayı kapat (aynı token iki yerden **polling** yapamaz)
+- [x] VM açıldı (Ubuntu 24.04, 1 GB)
+- [x] SSH anahtarıyla erişim
+- [x] `install-vm.sh` çalıştırıldı, `.env` dolduruldu
+- [x] Windows'taki kopya kapalı (aynı token iki yerden **polling** yapamaz)
 
 ## Faz 7 — İsteğe bağlı
 
@@ -86,7 +86,7 @@ cron 13 kez değiştirilmiş — saat tutturulmaya çalışılıp başarılamam�
 
 Sebep: GitHub Actions'ın zamanlanmış işleri "en erken şu saatte" anlamına
 gelir, garanti değildir; yoğunlukta saatlerce gecikir, bazen hiç çalışmaz.
-**Sabit 08:00 istiyorsan VM'deki bot bunu kesin yapar** — asıl gerekçe bu.
+**Sabit saat istiyorsan VM'deki bot bunu kesin yapar** — asıl gerekçe bu.
 
 **2. Yeşil çalışma ≠ mesaj gitti.** `send_telegram` hatayı yakalayıp
 yalnızca `print` ediyor, çıkış kodu yine 0. 288 çalışmanın hepsi "success"
@@ -108,7 +108,7 @@ durması daha doğru. Yeni botta ikisi de `.env`'de.
 
 | | Eski (Actions) | Yeni (VM) |
 |---|---|---|
-| Sabah duyurusu | ~10:30 TSİ, kayan | 08:00 TSİ, sabit |
+| Sabah duyurusu | ~10:30 TSİ, kayan | 08:30 TSİ, sabit |
 | "Bugün ne var" sorusu | yok | var |
 | Maliyet | bedava | VM ücreti |
 | Excel güncelleme | GitHub'a yükle | **aynı** |

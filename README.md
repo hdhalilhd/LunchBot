@@ -4,8 +4,7 @@ Telegram botu. İki iş yapar:
 
 1. **Özel sohbette** "bugün ne var", "yarın ne var", "çarşamba ne var",
    "24 eylül", "bu hafta" gibi sorulara cevap verir.
-2. **Her sabah 08:00'de** belirlenen gruba o günün menüsünü yazar.
-   *(Şu an kapalı — grup açılınca devreye girecek.)*
+2. **Hafta içi her sabah 08:30'da** belirlenen gruba o günün menüsünü yazar.
 
 Grupta bot **hiçbir mesaja cevap vermez**; gruba sadece sabah duyurusunu gönderir.
 
@@ -142,7 +141,8 @@ Dikkat edilecekler:
 
 ## 4. Grup açılınca yapılacaklar
 
-1. Grubu kur, @Lunchaibot'u ekle.
+1. Grubu kur, @Lunchaibot'u ekle. Grupta üyelerin yazması kapalıysa botu yönetici
+   yap, yoksa mesaj gönderemez (özel yetki vermek gerekmez).
 2. Gruba `/chatid@Lunchaibot` yaz → çıkan `-100...` numarasını al.
 3. `.env` içine `GROUP_CHAT_ID=-100...` yaz.
 4. [config.yaml](config.yaml) → `daily_post.enabled: true`.
@@ -234,7 +234,7 @@ menubot/
 │   ├── nlu.py              # "bugün ne var" → tarih  (AI yok)
 │   ├── render.py           # tarih + satır → Telegram mesajı
 │   ├── handlers.py         # komutlar ve serbest metin
-│   └── jobs.py             # her sabah 08:00 grup mesajı
+│   └── jobs.py             # hafta içi 08:30 grup mesajı
 ├── data/
 │   ├── Yemek_Listesi.xlsx  # yerel yedek kopya
 │   └── menu.csv            # CSV biçimi örneği
@@ -246,5 +246,5 @@ menubot/
 ├── deploy/
 │   ├── menubot.service     # systemd
 │   └── install-vm.sh       # VM kurulumu
-└── tests/                  # 55 test
+└── tests/                  # 60 test
 ```

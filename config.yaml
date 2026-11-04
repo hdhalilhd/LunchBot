@@ -32,10 +32,10 @@ fields:
   "ekstra": "🍮 Ekstra"
 
 # Her sabah gruba atılan otomatik mesaj.
-# ŞİMDİLİK KAPALI — grup açılınca true yap ve .env'e GROUP_CHAT_ID yaz.
+# Grup id'si .env > GROUP_CHAT_ID içinde.
 daily_post:
-  enabled: false
-  time: "08:00"
+  enabled: true
+  time: "08:30"
   timezone: "Europe/Istanbul"
   # Menüde hafta sonu yok; boşuna çalışmasın.
   skip_weekends: true
