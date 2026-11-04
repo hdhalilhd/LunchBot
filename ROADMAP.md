@@ -40,12 +40,11 @@ Veri: [hdhalilhd/lunchnotice](https://github.com/hdhalilhd/lunchnotice) → `Yem
 - [x] "22 Eylül 2026" biçimindeki Türkçe tarihler çözülüyor
 - [ ] **(sen)** Ekim menüsünü yükle — elimizdeki veri **30 Eylül'de bitiyor**
 
-## Faz 4 — Grup  ⬅️ **sırada (sen)**
+## Faz 4 — Grup  ✅ bitti
 
-- [x] Grup açık, @Lunchaibot üye
-- [ ] **(sen)** Grupta üyelerin yazması kapalı: @Lunchaibot'u yönetici yap
+- [x] Grup açık, @Lunchaibot yönetici (grupta üyelerin yazması kapalı)
 - [x] `.env` → `GROUP_CHAT_ID`, `config.yaml` → `daily_post.enabled: true`, hafta içi 08:30
-- [ ] Bot grupta çalışınca eski GitHub Actions duyurusunu kapat
+- [x] Eski GitHub Actions duyurusunun zamanlaması kapatıldı, elle çalıştırma duruyor
       (bkz. aşağıdaki "Eski sistemle ilişki")
 
 ## Faz 5 — Dağıtım altyapısı  ✅ bitti
@@ -75,6 +74,10 @@ Akış: Windows'ta değiştir → `git push` → VM `update.sh` (ya da timer ken
 ---
 
 ## Eski sistemle ilişki (lunchnotice + GitHub Actions)
+
+**Durum (04.11.2026):** Actions'ın zamanlaması kapatıldı, gruba artık yeni bot yazıyor.
+`lunchnotice` reposu kalıyor: bot menüyü oradaki Excel'den okuyor. Aşağısı o kararın
+öncesindeki inceleme.
 
 Şubat 2026'dan beri çalışan bir kurulum var: GitHub Actions cron'u her gün
 `menu_to_telegram.py` çalıştırıp menüyü gönderiyor. Bulgular:
